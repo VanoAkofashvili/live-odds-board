@@ -1,28 +1,51 @@
 import { devtools } from "zustand/middleware";
 import { create } from "zustand";
 
-type UpdateOddDataTODO = {
+type PositionData = {
   matchId: string;
-  oddId: string;
+  participants: { name: string }[];
+  gameName: string; // 1x2, double chance, total -- category
+  outcomeOdds: number;
+  outcomeName: string; // 1, x, 2 and so on
+  outcomeId: string;
 };
 
 type State = {
-  odds: Record<string, any>;
+  positions: Record<string, Omit<PositionData, "matchId">>;
 };
 
 type Action = {
-  updateOdd: (odd: UpdateOddDataTODO) => void;
+  updatePosition: (position: PositionData) => void;
+  removePosition: (matchId: string) => void;
+  removeAllPosition: () => void;
 };
 
-export const useOdds = create<State & Action>()(
+export const usePositions = create<State & Action>()(
   devtools((set) => ({
-    odds: {},
-    updateOdd: ({ matchId, ...oddData }) =>
+    positions: {},
+    removeAllPosition: () =>
       set((state) => {
         return {
           ...state,
-          odds: {
-            ...state.odds,
+          positions: {},
+        };
+      }),
+    removePosition: (matchId) =>
+      set((state) => {
+        const newPositions = { ...state.positions };
+        delete newPositions[matchId];
+
+        return {
+          ...state,
+          positions: newPositions,
+        };
+      }),
+    updatePosition: ({ matchId, ...oddData }) =>
+      set((state) => {
+        return {
+          ...state,
+          positions: {
+            ...state.positions,
             [matchId]: oddData,
           },
         };
