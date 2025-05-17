@@ -8,7 +8,7 @@ const MOCK_MATCHES = generateInitialMatches();
 
 const LiveOddsBoard = () => {
   return (
-    <main className="flex px-2 h-full gap-2">
+    <main className="flex gap-2 h-full">
       <div className="flex-1">
         <AutoSizer>
           {({ width, height }) => (
@@ -20,7 +20,7 @@ const LiveOddsBoard = () => {
               width={width}
             >
               {({ data, style, index }) => (
-                <div style={style} className="my-2">
+                <div style={style} className="">
                   <EventRow match={data[index]} />
                 </div>
               )}

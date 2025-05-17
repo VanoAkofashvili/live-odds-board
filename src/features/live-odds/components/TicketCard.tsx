@@ -9,11 +9,11 @@ const TicketCard = () => {
   const isTicketEmpty = Object.keys(positions).length === 0;
 
   return (
-    <div className="bg-white-200 rounded-lg overflow-hidden overflow-y-auto max-h-2/3">
+    <div className="bg-white-200 rounded-lg overflow-y-auto">
       <div className="flex justify-between items-center border-b border-green-500 p-3.5">
         <span className="text-black font-semibold ">Ticket</span>
         {!isTicketEmpty && (
-          <span className="">
+          <span className="cursor-pointer">
             <RemoveIcon onClick={removeAllPositions} />
           </span>
         )}
@@ -23,7 +23,7 @@ const TicketCard = () => {
         {isTicketEmpty ? (
           <p className="text-gray-600 text-center">The ticket is empty</p>
         ) : (
-          <div>
+          <div className="pb-1">
             {Object.entries(positions).map(([matchId, ticket]) => {
               return (
                 <div
@@ -33,7 +33,7 @@ const TicketCard = () => {
                   <div className="flex justify-between gap-2">
                     <div>
                       {ticket.participants.map(({ name }) => (
-                        <p className="text-sm truncate">{name}</p>
+                        <p className="text-sm truncate max-w-[200px]">{name}</p>
                       ))}
                     </div>
                     <span

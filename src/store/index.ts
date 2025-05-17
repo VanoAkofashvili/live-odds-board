@@ -1,4 +1,4 @@
-import { devtools } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { create } from "zustand";
 
 type PositionData = {
@@ -21,34 +21,42 @@ type Action = {
 };
 
 export const usePositions = create<State & Action>()(
-  devtools((set) => ({
-    positions: {},
-    removeAllPosition: () =>
-      set((state) => {
-        return {
-          ...state,
-          positions: {},
-        };
-      }),
-    removePosition: (matchId) =>
-      set((state) => {
-        const newPositions = { ...state.positions };
-        delete newPositions[matchId];
+  devtools(
+    persist(
+      (set) => ({
+        positions: {},
+        removeAllPosition: () =>
+          set((state) => {
+            return {
+              ...state,
+              positions: {},
+            };
+          }),
+        removePosition: (matchId) =>
+          set((state) => {
+            const newPositions = { ...state.positions };
+            delete newPositions[matchId];
 
-        return {
-          ...state,
-          positions: newPositions,
-        };
+            return {
+              ...state,
+              positions: newPositions,
+            };
+          }),
+        updatePosition: ({ matchId, ...oddData }) =>
+          set((state) => {
+            return {
+              ...state,
+              positions: {
+                ...state.positions,
+                [matchId]: oddData,
+              },
+            };
+          }),
       }),
-    updatePosition: ({ matchId, ...oddData }) =>
-      set((state) => {
-        return {
-          ...state,
-          positions: {
-            ...state.positions,
-            [matchId]: oddData,
-          },
-        };
-      }),
-  }))
+      {
+        name: "positions-storage",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
+  )
 );
