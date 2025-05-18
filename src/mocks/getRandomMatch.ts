@@ -24,8 +24,8 @@ export const getRandomMatch = (): Match => {
       +(Math.random() * (maxOdds - minOdds) + minOdds).toFixed(2);
 
     return [
-      { id: `over-${line}`, name: "Over", odds: randOdds(), line },
-      { id: `under-${line}`, name: "Under", odds: randOdds(), line },
+      { id: `over-line`, name: "Over", odds: randOdds(), line },
+      { id: `under-line`, name: "Under", odds: randOdds(), line },
     ];
   };
 

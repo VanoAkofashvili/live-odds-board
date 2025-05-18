@@ -36,7 +36,6 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
 
   const selectedOdd = selectedOdds[match.id];
 
-  console.log({ totalGoals });
   return (
     <div className="bg-table-row text-black mx-auto h-full overflow-x-auto no-scrollbar">
       {/* HEADER */}
