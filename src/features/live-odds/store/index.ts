@@ -2,13 +2,12 @@ import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { create } from "zustand";
 import type { Match } from "../../../types";
 
-type PositionData = {
+export type PositionData = {
   matchId: string;
-  participants: { name: string }[];
-  gameName: string;
-  outcomeOdds: number;
-  outcomeName: string;
-  outcomeId: string;
+  gameName: string; // 1x2, double chance, total
+  marketId: string;
+  outcomeName: string; // 1 x 2 , 2x 1x
+  outcomeId: string; // 1, 2, x, and so on
 };
 
 type MatchesState = Record<string, Match>;
@@ -44,7 +43,6 @@ export const useOddsData = create<State & Action>()(
           }),
         updateMatches: (matches) =>
           set((state) => {
-            console.log("update: ", matches);
             const updatedMatches = { ...state.matches };
             Object.keys(matches).forEach((matchId) => {
               updatedMatches[matchId] = matches[matchId];
@@ -64,10 +62,12 @@ export const useOddsData = create<State & Action>()(
         removePosition: (matchId) =>
           set((state) => {
             const newPositions = { ...state.positions };
+
             delete newPositions[matchId];
 
             return {
               ...state,
+
               positions: newPositions,
             };
           }),
@@ -85,7 +85,7 @@ export const useOddsData = create<State & Action>()(
       {
         name: "positions-storage",
         storage: createJSONStorage(() => localStorage),
-        // partialize: (state) => state.positions,
+        partialize: (state) => ({ positions: state.positions }),
       }
     )
   )

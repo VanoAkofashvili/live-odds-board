@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { type Match } from "../types";
 
+let id = 0;
 export const getRandomMatch = (): Match => {
   const getRandomOdds = () =>
     parseFloat(faker.finance.amount({ min: 1.05, max: 10, dec: 2 }));
@@ -58,16 +59,46 @@ export const getRandomMatch = (): Match => {
   const markets = {
     "1X2": {
       selections: [
-        { id: "1", name: "1", odds: parseFloat(homeWin.toFixed(2)) },
-        { id: "X", name: "X", odds: parseFloat(draw.toFixed(2)) },
-        { id: "2", name: "2", odds: parseFloat(awayWin.toFixed(2)) },
+        {
+          id: "1",
+          name: "1",
+          odds: parseFloat(homeWin.toFixed(2)),
+          prevOdds: parseFloat(homeWin.toFixed(2)),
+        },
+        {
+          id: "X",
+          name: "X",
+          odds: parseFloat(draw.toFixed(2)),
+          prevOdds: parseFloat(draw.toFixed(2)),
+        },
+        {
+          id: "2",
+          name: "2",
+          odds: parseFloat(awayWin.toFixed(2)),
+          prevOdds: parseFloat(awayWin.toFixed(2)),
+        },
       ],
     },
     DoubleChance: {
       selections: [
-        { id: "1X", name: "1X", odds: doubleChanceHomeOrDraw },
-        { id: "12", name: "12", odds: doubleChanceAwayOrDraw },
-        { id: "X2", name: "X2", odds: doubleChanceHomeOrAway },
+        {
+          id: "1X",
+          name: "1X",
+          odds: doubleChanceHomeOrDraw,
+          prevOdds: doubleChanceHomeOrDraw,
+        },
+        {
+          id: "12",
+          name: "12",
+          odds: doubleChanceAwayOrDraw,
+          prevOdds: doubleChanceAwayOrDraw,
+        },
+        {
+          id: "X2",
+          name: "X2",
+          odds: doubleChanceHomeOrAway,
+          prevOdds: doubleChanceHomeOrAway,
+        },
       ],
     },
     TotalGoals: {
@@ -85,7 +116,7 @@ export const getRandomMatch = (): Match => {
   };
 
   return {
-    id: `match-${faker.database.mongodbObjectId()}`,
+    id: `match-${id++}`,
     markets,
     prevMarkets: markets,
     competitors: {

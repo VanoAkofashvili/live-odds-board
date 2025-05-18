@@ -2,8 +2,7 @@ import { Fragment } from "react/jsx-runtime";
 import { useOddsData } from "../store";
 import type { Match } from "../../../types";
 import { getMatchTimeAndHalf } from "../utils";
-import { cn } from "../../../shared/utils";
-import { useEffect, useState } from "react";
+import Outcome from "./Outcome";
 
 const Th = ({
   span = 1,
@@ -37,7 +36,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
   const selectedOdd = selectedOdds[match.id];
 
   return (
-    <div className="bg-table-row text-black  mx-auto">
+    <div className="bg-table-row text-black  mx-auto overflow-x-auto">
       {/* HEADER */}
       <div className="grid grid-cols-14 gap-2 items-center text-sm border-t-2 border-b-2 border-gray-500 bg-white-200 px-4">
         <Th label="Time" />
@@ -60,12 +59,11 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
           );
         })}
       </div>
-
       {/* DATA */}
-      <div className="mt-2 grid grid-cols-14 gap-2 items-center px-4">
+      <div className="mt-2 grid grid-cols-14 gap-2 items-center px-4 ">
         {/* Match time and pairs */}
         <div className="col-span-1 flex items-center">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-ping"></div>
+          <div className="w-2 h-2 bg-green-500 rounded-full shrink-0 mr-1 animate-ping"></div>
           <span className="text-sm">
             {matchTimeAndHalf.matchMinutes} <br />
             {matchTimeAndHalf.half} <br />
@@ -102,32 +100,34 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
 
         {oneXTwo.map((odd) => (
           <Outcome
-            isSelected={selectedOdd && selectedOdd.outcomeId === odd.id}
+            isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
             value={odd.odds}
+            prevValue={odd.prevOdds}
             onClick={() => {
               updatePosition({
                 matchId: match.id,
                 gameName: "1X2",
                 outcomeId: odd.id,
                 outcomeName: odd.name,
-                outcomeOdds: odd.odds,
-                participants: [{ name: home.name }, { name: away.name }],
+                marketId: "1X2",
+                // outcomeOdds: odd.odds,
+                // participants: [{ name: home.name }, { name: away.name }],
               });
             }}
           />
         ))}
         {doubleChance.map((odd) => (
           <Outcome
-            isSelected={selectedOdd && selectedOdd.outcomeId === odd.id}
+            isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
             value={odd.odds}
+            prevValue={odd.prevOdds}
             onClick={() => {
               updatePosition({
                 matchId: match.id,
                 gameName: "Double Chance",
                 outcomeId: odd.id,
                 outcomeName: odd.name,
-                outcomeOdds: odd.odds,
-                participants: [{ name: home.name }, { name: away.name }],
+                marketId: "DoubleChance",
               });
             }}
           />
@@ -138,13 +138,15 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
             {i === 1 && (
               <Outcome
                 value={odd.odds}
+                prevValue={odd.prevOdds}
                 onClick={() => {
                   console.log("handle total change");
                 }}
               />
             )}
             <Outcome
-              isSelected={selectedOdd && selectedOdd.outcomeId === odd.id}
+              isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
+              prevValue={odd.prevOdds}
               value={odd.odds}
               onClick={() => {
                 updatePosition({
@@ -152,8 +154,9 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
                   gameName: "TOTAL",
                   outcomeId: odd.id,
                   outcomeName: `${odd.name}-${odd.line}`,
-                  outcomeOdds: odd.odds,
-                  participants: [{ name: home.name }, { name: away.name }],
+                  marketId: "TotalGoals",
+                  // outcomeOdds: odd.odds,
+                  // participants: [{ name: home.name }, { name: away.name }],
                 });
               }}
             />
@@ -163,103 +166,5 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
     </div>
   );
 };
-
-type OutcomeProps = {
-  onClick: VoidFunction;
-  value: string | number;
-  isSelected?: boolean;
-};
-
-const Outcome: React.FC<OutcomeProps> = ({
-  value,
-  onClick,
-  isSelected = false,
-}) => {
-  const [prevValue, setPrevValue] = useState<string | number>(value);
-  const [animateGreen, setAnimateGreen] = useState(false);
-  const [animateRed, setAnimateRed] = useState(false);
-
-  useEffect(() => {
-    // Convert values to numbers for comparison
-    const numPrevValue =
-      typeof prevValue === "string" ? parseFloat(prevValue) : prevValue;
-    const numCurrentValue =
-      typeof value === "string" ? parseFloat(value) : value;
-
-    // Only animate if value has changed
-    if (numPrevValue !== numCurrentValue) {
-      if (numCurrentValue > numPrevValue) {
-        // Odds increased - green animation
-        setAnimateGreen(true);
-        setTimeout(() => setAnimateGreen(false), 1000);
-      } else if (numCurrentValue < numPrevValue) {
-        // Odds decreased - red animation
-        setAnimateRed(true);
-        setTimeout(() => setAnimateRed(false), 1000);
-      }
-
-      // Update previous value
-      setPrevValue(value);
-    }
-  }, [value]);
-
-  return (
-    <div>
-      <span onClick={() => setAnimateGreen(true)}>set</span>
-      <button
-        className={cn(
-          "col-span-1",
-          "cursor-pointer rounded-lg w-full border border-transparent h-9 relative overflow-hidden hover:border-green-500 text-center",
-          isSelected
-            ? "bg-green-500 text-white"
-            : "bg-gray-500 hover:bg-gray-50"
-        )}
-        onClick={onClick}
-      >
-        {/* Green animation - rises from bottom */}
-        {animateGreen && (
-          <div className="absolute w-full h-full bottom-0 animate-oddsRise bg-gradient-to-t from-green-400 duration-100 to-transparent " />
-        )}
-
-        {/* Red animation - falls from top */}
-        {animateRed && (
-          <div className="absolute w-full h-full top-0 animate-oddsFall bg-gradient-to-b from-red-400 duration-100 to-transparent " />
-        )}
-
-        {/* The odds value */}
-        <span
-          className={cn(
-            "relative z-10",
-            animateGreen ? "text-green-900" : "",
-            animateRed ? "text-red-900" : ""
-          )}
-        >
-          {value}
-        </span>
-      </button>
-    </div>
-  );
-};
-
-// const Outcome: React.FC<OutcomeProps> = ({
-//   value,
-//   onClick,
-//   isSelected = false,
-// }) => {
-//   return (
-//     // <div className="col-span-1">
-//     <button
-//       className={cn(
-//         "col-span-1",
-//         "cursor-pointer rounded-lg w-full border border-transparent h-9 relative hover:border-green-500 text-center",
-//         isSelected ? "bg-green-500 text-white" : "bg-gray-500 hover:bg-gray-50"
-//       )}
-//       onClick={onClick}
-//     >
-//       {value}
-//     </button>
-//     // </div>
-//   );
-// };
 
 export default EventRow;

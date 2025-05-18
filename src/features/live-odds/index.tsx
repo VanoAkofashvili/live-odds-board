@@ -29,7 +29,7 @@ const LiveOddsBoard = () => {
   const matchesData = Object.values(matches!);
 
   return (
-    <main className="flex gap-2 h-full">
+    <main className="flex gap-2 h-screen">
       <div className="flex-1">
         <AutoSizer>
           {({ width, height }) => (
@@ -50,7 +50,7 @@ const LiveOddsBoard = () => {
           )}
         </AutoSizer>
       </div>
-      <aside className="w-80">
+      <aside className="w-80 overflow-y-auto">
         <TicketCard />
       </aside>
     </main>

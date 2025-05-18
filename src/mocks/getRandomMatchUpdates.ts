@@ -1,12 +1,11 @@
-import { faker } from "@faker-js/faker";
 import type { Match } from "../types";
 import { AppConfig } from "../AppConfig";
 
 // TODO remove
-let i = 0;
+// let i = 0;
 const getRandomItem = (matches: Match[]) => {
-  // const randomIndex = Math.floor(Math.random() * matches.length);
-  const randomIndex = i++;
+  const randomIndex = Math.floor(Math.random() * matches.length);
+  // const randomIndex = i++;
   return matches[randomIndex];
 };
 
@@ -23,19 +22,19 @@ export const getRandomMatchUpdates = ({
   count?: number;
   matches: Match[];
 }) => {
-  console.log(matches, "DBBB");
   const updates = [];
   for (let i = 0; i < count; i++) {
     // Pick random match
     const randomMatch = getRandomItem(matches);
-    console.log(randomMatch, "randomMatch");
 
     const markets = randomMatch.markets;
 
-    if (faker.datatype.boolean()) {
+    if (Math.random() < 0.5) {
+      console.log("first ");
       markets["1X2"].selections = markets["1X2"].selections.map((s) => ({
         ...s,
         odds: randomAdjust(s.odds, 2.5),
+        prevOdds: s.odds,
       }));
     } else {
       markets["DoubleChance"].selections = markets[
@@ -43,6 +42,7 @@ export const getRandomMatchUpdates = ({
       ].selections.map((s) => ({
         ...s,
         odds: randomAdjust(s.odds, 2.5),
+        prevOdds: s.odds,
       }));
     }
 
@@ -51,7 +51,7 @@ export const getRandomMatchUpdates = ({
       markets,
     });
   }
-  i = 0; // tODO
+  // i = 0; // tODO
 
   return updates;
 };

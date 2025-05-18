@@ -9,6 +9,7 @@ export type Selection = {
   id: string;
   name: string;
   odds: number;
+  prevOdds?: number;
   line?: number;
 };
 

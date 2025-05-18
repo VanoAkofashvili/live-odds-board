@@ -1,12 +1,28 @@
 import { RemoveIcon, XIcon } from "../../../shared/components/Icons";
-import { useOddsData } from "../store";
+import type { Match } from "../../../types";
+import { useOddsData, type PositionData } from "../store";
+import Outcome from "./Outcome";
 
 const TicketCard = () => {
-  const positions = useOddsData((state) => state.positions);
+  const { positions, matches } = useOddsData();
   const removePosition = useOddsData((state) => state.removePosition);
   const removeAllPositions = useOddsData((state) => state.removeAllPosition);
 
-  const isTicketEmpty = Object.keys(positions).length === 0;
+  console.log(matches, positions);
+
+  if (!matches) return <div>loading...</div>;
+
+  const tickets: (Match & Omit<PositionData, "matchId">)[] = Object.keys(
+    positions
+  ).map((matchId) => {
+    return {
+      ...matches![matchId],
+      ...positions[matchId],
+    };
+  });
+  console.log(tickets, "tickets");
+
+  const isTicketEmpty = tickets.length === 0;
 
   return (
     <div className="bg-white-200 rounded-lg overflow-y-auto">
@@ -24,7 +40,12 @@ const TicketCard = () => {
           <p className="text-gray-600 text-center">The ticket is empty</p>
         ) : (
           <div className="pb-1">
-            {Object.entries(positions).map(([matchId, ticket]) => {
+            {tickets.map((ticket) => {
+              const matchId = ticket.matchId;
+
+              const { odds, prevOdds } = ticket.markets[
+                ticket.marketId
+              ].selections.find((s) => s.id === ticket.outcomeId);
               return (
                 <div
                   key={matchId}
@@ -32,9 +53,12 @@ const TicketCard = () => {
                 >
                   <div className="flex justify-between gap-2">
                     <div>
-                      {ticket.participants.map(({ name }) => (
-                        <p className="text-sm truncate max-w-[200px]">{name}</p>
-                      ))}
+                      <p className="text-sm truncate max-w-[200px]">
+                        {ticket.competitors.home.name}
+                      </p>
+                      <p className="text-sm truncate max-w-[200px]">
+                        {ticket.competitors.away.name}
+                      </p>
                     </div>
                     <span
                       className="cursor-pointer"
@@ -46,10 +70,12 @@ const TicketCard = () => {
                     </span>
                   </div>
 
-                  <div className="pl-2">
+                  <div className="pl-2 flex flex-col gap-2">
                     <p>{ticket.gameName}</p>
                     <p className="text-gray-400">{ticket.outcomeName}</p>
-                    <p className="text-white text-sm ">{ticket.outcomeOdds}</p>
+                    <p className="text-white text-sm ">
+                      <Outcome isActive value={odds} />
+                    </p>
                   </div>
                 </div>
               );
