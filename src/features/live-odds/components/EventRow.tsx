@@ -21,6 +21,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
   const { home, away } = match.competitors;
 
   const updatePosition = useOddsData((state) => state.updatePosition);
+  const removePosition = useOddsData((state) => state.removePosition);
   const selectedOdds = useOddsData((state) => state.positions);
 
   // Betting Options
@@ -53,7 +54,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
         {totalGoals.slice(0, 2).map((odd, i) => {
           return (
             <Fragment key={odd.id}>
-              {i === 1 && <Th label={odd.name} className="text-center" />}
+              {i === 1 && <Th label="Total" className="text-center" />}
               <Th label={odd.name} className="text-center" />
             </Fragment>
           );
@@ -98,70 +99,79 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
           </div>
         </div>
 
-        {oneXTwo.map((odd) => (
-          <Outcome
-            isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
-            value={odd.odds}
-            prevValue={odd.prevOdds}
-            onClick={() => {
-              updatePosition({
-                matchId: match.id,
-                gameName: "1X2",
-                outcomeId: odd.id,
-                outcomeName: odd.name,
-                marketId: "1X2",
-                // outcomeOdds: odd.odds,
-                // participants: [{ name: home.name }, { name: away.name }],
-              });
-            }}
-          />
-        ))}
-        {doubleChance.map((odd) => (
-          <Outcome
-            isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
-            value={odd.odds}
-            prevValue={odd.prevOdds}
-            onClick={() => {
-              updatePosition({
-                matchId: match.id,
-                gameName: "Double Chance",
-                outcomeId: odd.id,
-                outcomeName: odd.name,
-                marketId: "DoubleChance",
-              });
-            }}
-          />
-        ))}
-        {/* TODO: remove slice */}
-        {totalGoals.slice(0, 2).map((odd, i) => (
-          <Fragment key={odd.id}>
-            {i === 1 && (
-              <Outcome
-                value={odd.odds}
-                prevValue={odd.prevOdds}
-                onClick={() => {
-                  console.log("handle total change");
-                }}
-              />
-            )}
+        {oneXTwo.map((odd) => {
+          const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
+          return (
             <Outcome
-              isActive={selectedOdd && selectedOdd.outcomeId === odd.id}
-              prevValue={odd.prevOdds}
+              isActive={isActive}
               value={odd.odds}
+              prevValue={odd.prevOdds}
               onClick={() => {
+                if (isActive) return removePosition(match.id);
                 updatePosition({
                   matchId: match.id,
-                  gameName: "TOTAL",
+                  gameName: "1X2",
                   outcomeId: odd.id,
-                  outcomeName: `${odd.name}-${odd.line}`,
-                  marketId: "TotalGoals",
-                  // outcomeOdds: odd.odds,
-                  // participants: [{ name: home.name }, { name: away.name }],
+                  outcomeName: odd.name,
+                  marketId: "1X2",
                 });
               }}
             />
-          </Fragment>
-        ))}
+          );
+        })}
+        {doubleChance.map((odd) => {
+          const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
+          return (
+            <Outcome
+              isActive={isActive}
+              value={odd.odds}
+              prevValue={odd.prevOdds}
+              onClick={() => {
+                if (isActive) return removePosition(match.id);
+
+                updatePosition({
+                  matchId: match.id,
+                  gameName: "Double Chance",
+                  outcomeId: odd.id,
+                  outcomeName: odd.name,
+                  marketId: "DoubleChance",
+                });
+              }}
+            />
+          );
+        })}
+        {/* TODO: remove slice */}
+        {totalGoals.slice(0, 2).map((odd, i) => {
+          const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
+          return (
+            <Fragment key={odd.id}>
+              {i === 1 && (
+                <Outcome
+                  value={odd.odds}
+                  prevValue={odd.prevOdds}
+                  onClick={() => {
+                    console.log("handle total change");
+                  }}
+                />
+              )}
+              <Outcome
+                isActive={isActive}
+                prevValue={odd.prevOdds}
+                value={odd.odds}
+                onClick={() => {
+                  if (isActive) return removePosition(match.id);
+                  updatePosition({
+                    matchId: match.id,
+                    gameName: "TOTAL",
+                    outcomeId: odd.id,
+                    outcomeName: `${odd.name}-${odd.line}`,
+                    marketId: "TotalGoals",
+                  });
+                }}
+              />
+            </Fragment>
+          );
+        })}
       </div>
     </div>
   );
