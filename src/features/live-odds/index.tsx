@@ -10,7 +10,8 @@ import { cn } from "../../shared/utils";
 import RowRenderer from "./components/RowRenderer";
 
 const LiveOddsBoard = () => {
-  const { isLoading, matches, setMatches, updateMatches } = useOddsData();
+  const { isLoading, matches, setMatches, updateMatches, positions } =
+    useOddsData();
 
   const [isTicketVisible, setIsTicketVisible] = useState(false);
 
@@ -67,6 +68,9 @@ const LiveOddsBoard = () => {
             setIsTicketVisible((prev) => !prev);
           }}
         >
+          <span className="absolute top-0 right-0 rounded-full h-5 w-5 text-xs bg-gray-800 flex items-center justify-center text-white">
+            {Object.keys(positions).length}
+          </span>
           {isTicketVisible ? (
             <XIcon className="w-10" />
           ) : (
