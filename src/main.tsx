@@ -6,7 +6,7 @@ import "./index.css";
 async function enableMocking() {
   const { worker } = await import("./mocks/browser");
 
-  if (process.env.NODE_ENV !== "development") {
+  if (import.meta.env.MODE !== "development") {
     return worker.start({
       serviceWorker: {
         url: "/mockServiceWorker.js",
