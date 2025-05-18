@@ -5,6 +5,15 @@ import "./index.css";
 
 async function enableMocking() {
   const { worker } = await import("./mocks/browser");
+
+  if (process.env.NODE_ENV !== "development") {
+    return worker.start({
+      serviceWorker: {
+        url: "/mockServiceWorker.js",
+      },
+    });
+  }
+
   return worker.start();
 }
 
