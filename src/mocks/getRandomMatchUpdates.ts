@@ -30,7 +30,6 @@ export const getRandomMatchUpdates = ({
     const markets = randomMatch.markets;
 
     if (Math.random() < 0.5) {
-      console.log("first ");
       markets["1X2"].selections = markets["1X2"].selections.map((s) => ({
         ...s,
         odds: randomAdjust(s.odds, 2.5),

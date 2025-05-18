@@ -25,7 +25,9 @@ const TicketCard = () => {
   return (
     <div className="bg-white-200 rounded-lg overflow-hidden">
       <div className="flex justify-between items-center border-b border-outcome-active p-3.5">
-        <span className="text-black font-semibold ">Ticket</span>
+        <span className="text-black font-semibold ">
+          Tickets {!isTicketEmpty && <span>({tickets.length})</span>}
+        </span>
         {!isTicketEmpty && (
           <span className="cursor-pointer">
             <RemoveIcon onClick={removeAllPositions} />
@@ -71,9 +73,9 @@ const TicketCard = () => {
                   <div className="pl-2 flex flex-col gap-2">
                     <p>{ticket.gameName}</p>
                     <p className="text-gray-400">{ticket.outcomeName}</p>
-                    <p className="text-white text-sm ">
+                    <div className="text-white text-sm ">
                       <Outcome isActive value={odds} />
-                    </p>
+                    </div>
                   </div>
                 </div>
               );

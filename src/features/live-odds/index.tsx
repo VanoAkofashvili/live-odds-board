@@ -1,6 +1,5 @@
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import EventRow from "./components/EventRow";
 import TicketCard from "./components/TicketCard";
 import { useOddsData } from "./store";
 import { useEffect, useState } from "react";
@@ -8,6 +7,7 @@ import { getMatches } from "./api/getMatches";
 import { transformMatches } from "./utils";
 import { TicketIcon, XIcon } from "../../shared/components/Icons";
 import { cn } from "../../shared/utils";
+import RowRenderer from "./components/RowRenderer";
 
 const LiveOddsBoard = () => {
   const { isLoading, matches, setMatches, updateMatches } = useOddsData();
@@ -45,11 +45,7 @@ const LiveOddsBoard = () => {
               width={width}
               itemKey={(index) => matchesData![index].id}
             >
-              {({ data, style, index }) => (
-                <div style={style}>
-                  <EventRow match={data![index]} />
-                </div>
-              )}
+              {RowRenderer}
             </List>
           )}
         </AutoSizer>
