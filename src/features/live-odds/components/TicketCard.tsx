@@ -5,10 +5,9 @@ import Outcome from "./Outcome";
 
 const TicketCard = () => {
   const { positions, matches } = useOddsData();
+
   const removePosition = useOddsData((state) => state.removePosition);
   const removeAllPositions = useOddsData((state) => state.removeAllPosition);
-
-  console.log(matches, positions);
 
   if (!matches) return <div>loading...</div>;
 
@@ -20,13 +19,12 @@ const TicketCard = () => {
       ...positions[matchId],
     };
   });
-  console.log(tickets, "tickets");
 
   const isTicketEmpty = tickets.length === 0;
 
   return (
-    <div className="bg-white-200 rounded-lg overflow-y-auto">
-      <div className="flex justify-between items-center border-b border-green-500 p-3.5">
+    <div className="bg-white-200 rounded-lg overflow-hidden">
+      <div className="flex justify-between items-center border-b border-outcome-active p-3.5">
         <span className="text-black font-semibold ">Ticket</span>
         {!isTicketEmpty && (
           <span className="cursor-pointer">
@@ -35,7 +33,7 @@ const TicketCard = () => {
         )}
       </div>
 
-      <div className="bg-table-row p-2">
+      <div className="bg-table-row p-2 max-h-[600px] overflow-hidden overflow-y-auto">
         {isTicketEmpty ? (
           <p className="text-gray-600 text-center">The ticket is empty</p>
         ) : (

@@ -3,12 +3,16 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import EventRow from "./components/EventRow";
 import TicketCard from "./components/TicketCard";
 import { useOddsData } from "./store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMatches } from "./api/getMatches";
 import { transformMatches } from "./utils";
+import { TicketIcon, XIcon } from "../../shared/components/Icons";
+import { cn } from "../../shared/utils";
 
 const LiveOddsBoard = () => {
   const { isLoading, matches, setMatches, updateMatches } = useOddsData();
+
+  const [isTicketVisible, setIsTicketVisible] = useState(false);
 
   useEffect(() => {
     getMatches().then((data) => {
@@ -37,7 +41,7 @@ const LiveOddsBoard = () => {
               itemData={matchesData}
               height={height}
               itemCount={matchesData!.length}
-              itemSize={150}
+              itemSize={120}
               width={width}
               itemKey={(index) => matchesData![index].id}
             >
@@ -50,9 +54,33 @@ const LiveOddsBoard = () => {
           )}
         </AutoSizer>
       </div>
-      <aside className="w-80 overflow-y-auto">
-        <TicketCard />
-      </aside>
+      <div className="relative">
+        {isTicketVisible && (
+          <div className="fixed lg:hidden right-0 overflow-hidden top-0 drop-shadow-lg drop-shadow-black min-w-80 rounded-2xl">
+            <TicketCard />
+          </div>
+        )}
+        <div
+          title="Ticket"
+          className={cn(
+            "lg:hidden",
+            "fixed bottom-10 right-10 w-20 h-20 rounded-full bg-outcome-active flex justify-center items-center cursor-pointer text-white",
+            "hover:transform hover:-translate-y-1 transition-all ease-in-out duration-300"
+          )}
+          onClick={() => {
+            setIsTicketVisible((prev) => !prev);
+          }}
+        >
+          {isTicketVisible ? (
+            <XIcon className="w-10" />
+          ) : (
+            <TicketIcon className="w-10" />
+          )}
+        </div>
+        <aside className="w-80 hidden lg:block">
+          <TicketCard />
+        </aside>
+      </div>
     </main>
   );
 };

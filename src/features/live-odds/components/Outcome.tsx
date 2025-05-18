@@ -30,8 +30,8 @@ const Outcome = (props: OutcomeProps) => {
         isActive ? "bg-outcome-active text-white" : "bg-outcome",
         "border border-transparent hover:border-outcome-active",
         "rounded-lg",
-        "flex justify-center items-center h-9 min-w-16",
-        "cursor-pointer",
+        "flex justify-center items-center h-9 min-w-20 shrink-0",
+        onClick ? "cursor-pointer" : "",
         "transition-colors",
         animate
       )}
