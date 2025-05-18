@@ -65,7 +65,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
         <div className="col-span-1 flex items-center shrink-0">
           <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-ping shrink-0"></div>
           <span className="text-sm whitespace-nowrap">
-            {matchTimeAndHalf.matchMinutes} <br />
+            {matchTimeAndHalf.matchMinutes}' <br />
             {matchTimeAndHalf.half} <br />
             {matchTimeAndHalf.formattedStartTime}
           </span>
@@ -152,6 +152,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
                   value={odd.odds}
                   prevValue={odd.prevOdds}
                   onClick={() => {
+                    // TODO
                     console.log("handle total change");
                   }}
                 />

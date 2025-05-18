@@ -2,12 +2,13 @@ import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import TicketCard from "./components/TicketCard";
 import { useOddsData } from "./store";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getMatches } from "./api/getMatches";
 import { transformMatches } from "./utils";
 import { TicketIcon, XIcon } from "../../shared/components/Icons";
-import { cn } from "../../shared/utils";
+import { cn, debounce } from "../../shared/utils";
 import RowRenderer from "./components/RowRenderer";
+import Loader from "../../shared/components/Loader";
 
 const LiveOddsBoard = () => {
   const { isLoading, matches, setMatches, updateMatches, positions } =
@@ -29,7 +30,21 @@ const LiveOddsBoard = () => {
     });
   }, []);
 
-  if (isLoading && !matches) return <div>loading...</div>;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saveScrollOffset = useCallback(
+    debounce((scrollOffset: number) => {
+      if (!scrollOffset) return;
+      localStorage.setItem("scrollOffset", String(scrollOffset));
+    }, 100),
+    []
+  );
+
+  if (isLoading && !matches)
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
+    );
 
   const matchesData = Object.values(matches!);
 
@@ -45,6 +60,12 @@ const LiveOddsBoard = () => {
               itemSize={120}
               width={width}
               itemKey={(index) => matchesData![index].id}
+              initialScrollOffset={parseInt(
+                localStorage.getItem("scrollOffset") || "0"
+              )}
+              onScroll={(scrollData) => {
+                saveScrollOffset(scrollData.scrollOffset);
+              }}
             >
               {RowRenderer}
             </List>

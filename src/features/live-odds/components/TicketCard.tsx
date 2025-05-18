@@ -1,4 +1,5 @@
 import { RemoveIcon, XIcon } from "../../../shared/components/Icons";
+import Loader from "../../../shared/components/Loader";
 import type { MarketType, Match } from "../../../types";
 import { useOddsData, type PositionData } from "../store";
 import Outcome from "./Outcome";
@@ -9,7 +10,7 @@ const TicketCard = () => {
   const removePosition = useOddsData((state) => state.removePosition);
   const removeAllPositions = useOddsData((state) => state.removeAllPosition);
 
-  if (!matches) return <div>loading...</div>;
+  if (!matches) return <Loader />;
 
   const tickets: (Match & Omit<PositionData, "matchId">)[] = Object.keys(
     positions
