@@ -118,7 +118,6 @@ export const getRandomMatch = (): Match => {
   return {
     id: `match-${id++}`,
     markets,
-    prevMarkets: markets,
     competitors: {
       home: {
         name: homeTeam,

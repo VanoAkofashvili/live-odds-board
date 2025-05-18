@@ -1,9 +1,4 @@
-export const MarketType = {
-  "1X2": "1X2",
-  DoubleChance: "DoubleChance",
-  TotalGoals: "TotalGoals",
-};
-type MarketType = keyof typeof MarketType;
+export type MarketType = "1X2" | "DoubleChance" | "TotalGoals";
 
 export type Selection = {
   id: string;
@@ -30,7 +25,6 @@ export type Match = {
     };
   };
   markets: Record<MarketType, Market>;
-  prevMarkets: Record<MarketType, Market>;
   startTime: string | Date;
   matchProgress: number;
   score: {

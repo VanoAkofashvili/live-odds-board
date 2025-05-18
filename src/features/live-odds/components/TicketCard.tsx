@@ -1,5 +1,5 @@
 import { RemoveIcon, XIcon } from "../../../shared/components/Icons";
-import type { Match } from "../../../types";
+import type { MarketType, Match } from "../../../types";
 import { useOddsData, type PositionData } from "../store";
 import Outcome from "./Outcome";
 
@@ -41,11 +41,11 @@ const TicketCard = () => {
         ) : (
           <div className="pb-1">
             {tickets.map((ticket) => {
-              const matchId = ticket.matchId;
+              const matchId = ticket.id;
 
-              const { odds, prevOdds } = ticket.markets[
-                ticket.marketId
-              ].selections.find((s) => s.id === ticket.outcomeId);
+              const { odds } = ticket.markets[
+                ticket.marketId as MarketType
+              ].selections.find((s) => s.id === ticket.outcomeId)!;
               return (
                 <div
                   key={matchId}
