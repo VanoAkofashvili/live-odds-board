@@ -1,10 +1,10 @@
-import { RemoveIcon, XIcon } from "../../../shared/Icons";
-import { usePositions } from "../../../store";
+import { RemoveIcon, XIcon } from "../../../shared/components/Icons";
+import { useOddsData } from "../store";
 
 const TicketCard = () => {
-  const positions = usePositions((state) => state.positions);
-  const removePosition = usePositions((state) => state.removePosition);
-  const removeAllPositions = usePositions((state) => state.removeAllPosition);
+  const positions = useOddsData((state) => state.positions);
+  const removePosition = useOddsData((state) => state.removePosition);
+  const removeAllPositions = useOddsData((state) => state.removeAllPosition);
 
   const isTicketEmpty = Object.keys(positions).length === 0;
 

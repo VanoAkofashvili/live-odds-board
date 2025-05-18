@@ -18,7 +18,6 @@ type Market = {
 
 export type Match = {
   id: string;
-  sport: "soccer";
   competitors: {
     home: {
       name: string;
@@ -30,47 +29,11 @@ export type Match = {
     };
   };
   markets: Record<MarketType, Market>;
+  prevMarkets: Record<MarketType, Market>;
   startTime: string | Date;
-  matchProgress: number; // Adding progress as percentage
+  matchProgress: number;
   score: {
     home: number;
     away: number;
-  };
-  totalLine: number; // TODO
-
-  odds: {
-    "1X2": {
-      home: number;
-      draw: number;
-      away: number;
-    };
-    "Double Chance": {
-      homeOrDraw: number;
-      awayOrDraw: number;
-      homeOrAway: number;
-    };
-    Total: {
-      over: number;
-      total: number;
-      under: number;
-    };
-  };
-  // Added for animation tracking
-  previousOdds: {
-    "1X2": {
-      home: number;
-      draw: number;
-      away: number;
-    };
-    "Double Chance": {
-      homeOrDraw: number;
-      awayOrDraw: number;
-      homeOrAway: number;
-    };
-    Total: {
-      over: number;
-      total: number;
-      under: number;
-    };
   };
 };

@@ -8,6 +8,31 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .animation-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .green-animation {
+    position: absolute;
+    bottom: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 255, 0, 0.3), transparent);
+    opacity: 0;
+  }
+
+  .red-animation {
+    position: absolute;
+    top: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255, 0, 0, 0.3), transparent);
+    opacity: 0;
+  }
 }
 
 @theme {
@@ -21,4 +46,65 @@
 
   --color-blue-800: #011e28;
   --color-blue-900: #00151e;
+
+  --animate-flashGreen: flashGreen 1s ease-in-out infinite;
+  --animate-flashRed: flashRed 1s ease-in-out infinite;
+
+  @keyframes flashGreen {
+    0% {
+      background: var(--color-green-600);
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  @keyframes flashRed {
+    0% {
+      background: #fee2e2;
+    }
+    100% {
+      background: transparent;
+    }
+  }
+
+  @keyframes oddsRise: {
+    0% {
+      transform: translateY(100%);
+      opacity: 0.7;
+    }
+    33% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    33.1% {
+      transform: translateY(100%);
+      opacity: 0.7;
+    }
+    66% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    66.1% {
+      transform: translateY(100%);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes oddsFall {
+    0% {
+      transform: translateY(-100%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+  }
+
+  --animate-oddsRise: oddsRise 1s ease-out forwards;
+  --animate-oddsFall: oddsFall 1s ease-out forwards;
 }

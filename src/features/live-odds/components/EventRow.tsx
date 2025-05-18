@@ -1,8 +1,9 @@
 import { Fragment } from "react/jsx-runtime";
-import { usePositions } from "../../../store";
+import { useOddsData } from "../store";
 import type { Match } from "../../../types";
 import { getMatchTimeAndHalf } from "../utils";
 import { cn } from "../../../shared/utils";
+import { useEffect, useState } from "react";
 
 const Th = ({
   span = 1,
@@ -20,8 +21,8 @@ type EventRowProps = {
 const EventRow: React.FC<EventRowProps> = ({ match }) => {
   const { home, away } = match.competitors;
 
-  const updatePosition = usePositions((state) => state.updatePosition);
-  const selectedOdds = usePositions((state) => state.positions);
+  const updatePosition = useOddsData((state) => state.updatePosition);
+  const selectedOdds = useOddsData((state) => state.positions);
 
   // Betting Options
   const oneXTwo = match.markets["1X2"].selections;
@@ -35,7 +36,6 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
 
   const selectedOdd = selectedOdds[match.id];
 
-  console.log(selectedOdds, "odds");
   return (
     <div className="bg-table-row text-black  mx-auto">
       {/* HEADER */}
@@ -53,10 +53,10 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
         ))}
         {totalGoals.slice(0, 2).map((odd, i) => {
           return (
-            <>
+            <Fragment key={odd.id}>
               {i === 1 && <Th label={odd.name} className="text-center" />}
               <Th label={odd.name} className="text-center" />
-            </>
+            </Fragment>
           );
         })}
       </div>
@@ -134,7 +134,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
         ))}
         {/* TODO: remove slice */}
         {totalGoals.slice(0, 2).map((odd, i) => (
-          <Fragment>
+          <Fragment key={odd.id}>
             {i === 1 && (
               <Outcome
                 value={odd.odds}
@@ -169,23 +169,97 @@ type OutcomeProps = {
   value: string | number;
   isSelected?: boolean;
 };
+
 const Outcome: React.FC<OutcomeProps> = ({
   value,
   onClick,
   isSelected = false,
-}) => (
-  <div className="col-span-1">
-    <button
-      className={cn(
-        "cursor-pointer rounded-lg w-full border border-transparent hover:border-green-500 py-3 text-center",
-        isSelected ? "bg-green-500 text-white" : "bg-gray-500 hover:bg-gray-50",
-        "transition-all duration-75 ease-in-out"
-      )}
-      onClick={onClick}
-    >
-      {value}
-    </button>
-  </div>
-);
+}) => {
+  const [prevValue, setPrevValue] = useState<string | number>(value);
+  const [animateGreen, setAnimateGreen] = useState(false);
+  const [animateRed, setAnimateRed] = useState(false);
+
+  useEffect(() => {
+    // Convert values to numbers for comparison
+    const numPrevValue =
+      typeof prevValue === "string" ? parseFloat(prevValue) : prevValue;
+    const numCurrentValue =
+      typeof value === "string" ? parseFloat(value) : value;
+
+    // Only animate if value has changed
+    if (numPrevValue !== numCurrentValue) {
+      if (numCurrentValue > numPrevValue) {
+        // Odds increased - green animation
+        setAnimateGreen(true);
+        setTimeout(() => setAnimateGreen(false), 1000);
+      } else if (numCurrentValue < numPrevValue) {
+        // Odds decreased - red animation
+        setAnimateRed(true);
+        setTimeout(() => setAnimateRed(false), 1000);
+      }
+
+      // Update previous value
+      setPrevValue(value);
+    }
+  }, [value]);
+
+  return (
+    <div>
+      <span onClick={() => setAnimateGreen(true)}>set</span>
+      <button
+        className={cn(
+          "col-span-1",
+          "cursor-pointer rounded-lg w-full border border-transparent h-9 relative overflow-hidden hover:border-green-500 text-center",
+          isSelected
+            ? "bg-green-500 text-white"
+            : "bg-gray-500 hover:bg-gray-50"
+        )}
+        onClick={onClick}
+      >
+        {/* Green animation - rises from bottom */}
+        {animateGreen && (
+          <div className="absolute w-full h-full bottom-0 animate-oddsRise bg-gradient-to-t from-green-400 duration-100 to-transparent " />
+        )}
+
+        {/* Red animation - falls from top */}
+        {animateRed && (
+          <div className="absolute w-full h-full top-0 animate-oddsFall bg-gradient-to-b from-red-400 duration-100 to-transparent " />
+        )}
+
+        {/* The odds value */}
+        <span
+          className={cn(
+            "relative z-10",
+            animateGreen ? "text-green-900" : "",
+            animateRed ? "text-red-900" : ""
+          )}
+        >
+          {value}
+        </span>
+      </button>
+    </div>
+  );
+};
+
+// const Outcome: React.FC<OutcomeProps> = ({
+//   value,
+//   onClick,
+//   isSelected = false,
+// }) => {
+//   return (
+//     // <div className="col-span-1">
+//     <button
+//       className={cn(
+//         "col-span-1",
+//         "cursor-pointer rounded-lg w-full border border-transparent h-9 relative hover:border-green-500 text-center",
+//         isSelected ? "bg-green-500 text-white" : "bg-gray-500 hover:bg-gray-50"
+//       )}
+//       onClick={onClick}
+//     >
+//       {value}
+//     </button>
+//     // </div>
+//   );
+// };
 
 export default EventRow;

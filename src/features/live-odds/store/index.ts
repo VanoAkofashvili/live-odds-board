@@ -1,16 +1,21 @@
 import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { create } from "zustand";
+import type { Match } from "../../../types";
 
 type PositionData = {
   matchId: string;
   participants: { name: string }[];
-  gameName: string; // 1x2, double chance, total -- category
+  gameName: string;
   outcomeOdds: number;
-  outcomeName: string; // 1, x, 2 and so on
+  outcomeName: string;
   outcomeId: string;
 };
 
+type MatchesState = Record<string, Match>;
+
 type State = {
+  isLoading: boolean;
+  matches: MatchesState | null;
   positions: Record<string, Omit<PositionData, "matchId">>;
 };
 
@@ -18,13 +23,37 @@ type Action = {
   updatePosition: (position: PositionData) => void;
   removePosition: (matchId: string) => void;
   removeAllPosition: () => void;
+  updateMatches: (matches: MatchesState) => void;
+  setMatches: (matches: MatchesState) => void;
 };
 
-export const usePositions = create<State & Action>()(
+export const useOddsData = create<State & Action>()(
   devtools(
     persist(
       (set) => ({
+        isLoading: true,
+        matches: null,
         positions: {},
+        setMatches: (matches) =>
+          set((state) => {
+            return {
+              ...state,
+              matches,
+              isLoading: false,
+            };
+          }),
+        updateMatches: (matches) =>
+          set((state) => {
+            console.log("update: ", matches);
+            const updatedMatches = { ...state.matches };
+            Object.keys(matches).forEach((matchId) => {
+              updatedMatches[matchId] = matches[matchId];
+            });
+            return {
+              ...state,
+              matches: updatedMatches,
+            };
+          }),
         removeAllPosition: () =>
           set((state) => {
             return {
@@ -56,6 +85,7 @@ export const usePositions = create<State & Action>()(
       {
         name: "positions-storage",
         storage: createJSONStorage(() => localStorage),
+        // partialize: (state) => state.positions,
       }
     )
   )
