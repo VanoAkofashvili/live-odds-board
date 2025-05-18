@@ -25,7 +25,7 @@ const Outcome = (props: OutcomeProps) => {
     <div
       onClick={onClick}
       className={cn(
-        "outcome",
+        "outcome relative",
         "overflow-hidden",
         isActive ? "bg-outcome-active text-white" : "bg-outcome",
         "border border-transparent hover:border-outcome-active",

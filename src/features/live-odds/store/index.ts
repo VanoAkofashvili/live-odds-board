@@ -4,10 +4,10 @@ import type { Match } from "../../../types";
 
 export type PositionData = {
   matchId: string;
-  gameName: string; // 1x2, double chance, total
+  gameName: string;
   marketId: string;
-  outcomeName: string; // 1 x 2 , 2x 1x
-  outcomeId: string; // 1, 2, x, and so on
+  outcomeName: string;
+  outcomeId: string;
 };
 
 type MatchesState = Record<string, Match>;
@@ -26,6 +26,7 @@ type Action = {
   setMatches: (matches: MatchesState) => void;
 };
 
+// We can use Immutable.js or the immer to update the local state
 export const useOddsData = create<State & Action>()(
   devtools(
     persist(
@@ -67,7 +68,6 @@ export const useOddsData = create<State & Action>()(
 
             return {
               ...state,
-
               positions: newPositions,
             };
           }),

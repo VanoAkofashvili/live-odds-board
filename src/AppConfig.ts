@@ -1,5 +1,5 @@
 const MATCHES_COUNT = 10_000;
-const MATCHES_TO_UPDATE = 200;
+const MATCHES_TO_UPDATE = 500;
 const WS_INTERVAL = 4000;
 
 export const AppConfig = {

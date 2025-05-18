@@ -1,12 +1,14 @@
+import { useCallback, useEffect, useState } from "react";
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import TicketCard from "./components/TicketCard";
-import { useOddsData } from "./store";
-import { useCallback, useEffect, useState } from "react";
-import { getMatches } from "./api/getMatches";
-import { transformMatches } from "./utils";
-import { TicketIcon, XIcon } from "../../shared/components/Icons";
+
 import { cn, debounce } from "../../shared/utils";
+import { TicketIcon, XIcon } from "../../shared/components/Icons";
+
+import { useOddsData } from "./store";
+import { transformMatches } from "./utils";
+import { getMatches } from "./api/getMatches";
+import TicketCard from "./components/TicketCard";
 import RowRenderer from "./components/RowRenderer";
 import Loader from "../../shared/components/Loader";
 
@@ -16,12 +18,14 @@ const LiveOddsBoard = () => {
 
   const [isTicketVisible, setIsTicketVisible] = useState(false);
 
+  // Can be used react-query
   useEffect(() => {
     getMatches().then((data) => {
       setMatches(data);
     });
   }, [setMatches]);
 
+  // react-query case
   useEffect(() => {
     const socket = new WebSocket("wss://live-updates.com");
 
@@ -33,7 +37,6 @@ const LiveOddsBoard = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saveScrollOffset = useCallback(
     debounce((scrollOffset: number) => {
-      if (!scrollOffset) return;
       localStorage.setItem("scrollOffset", String(scrollOffset));
     }, 100),
     []

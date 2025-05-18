@@ -10,10 +10,6 @@
     scrollbar-width: none;
   }
 
-  .outcome {
-    position: relative;
-  }
-
   .outcome::before {
     content: "";
     position: absolute;
@@ -43,11 +39,7 @@
   --color-black: #000;
   --color-black-500: #25292b;
   --color-gray-500: #e2e2e2;
-  --color-gray-50: #f4f5f6;
   --color-white-200: #fcfcfc;
-
-  --color-blue-800: #011e28;
-  --color-blue-900: #00151e;
 
   --color-outcome: #e2e2e2;
   --color-outcome-active: #f05a22;

@@ -9,6 +9,26 @@ export const getRandomMatch = (): Match => {
   const generateCompetitorName = () =>
     faker.location.city() + " " + faker.company.buzzNoun();
 
+  const generateRandomOverUnderData = () => {
+    const minLine = 0.5;
+    const maxLine = 4.5;
+    const step = 0.5;
+    const minOdds = 1.3;
+    const maxOdds = 3.0;
+
+    const steps = Math.floor((maxLine - minLine) / step) + 1;
+    const line = +(minLine + Math.floor(Math.random() * steps) * step).toFixed(
+      1
+    );
+    const randOdds = () =>
+      +(Math.random() * (maxOdds - minOdds) + minOdds).toFixed(2);
+
+    return [
+      { id: `over-${line}`, name: "Over", odds: randOdds(), line },
+      { id: `under-${line}`, name: "Under", odds: randOdds(), line },
+    ];
+  };
+
   const homeTeam = generateCompetitorName();
 
   let awayTeam;
@@ -102,16 +122,7 @@ export const getRandomMatch = (): Match => {
       ],
     },
     TotalGoals: {
-      selections: [
-        { id: "over-1.5", name: "Over", odds: 1.4, line: 1.5 },
-        { id: "under-1.5", name: "Under", odds: 2.8, line: 1.5 },
-
-        { id: "over-2.5", name: "Over", odds: 1.9, line: 2.5 },
-        { id: "under-2.5", name: "Under", odds: 1.9, line: 2.5 },
-
-        { id: "over-3.5", name: "Over", odds: 2.5, line: 3.5 },
-        { id: "under-3.5", name: "Under", odds: 1.5, line: 3.5 },
-      ],
+      selections: generateRandomOverUnderData(),
     },
   };
 

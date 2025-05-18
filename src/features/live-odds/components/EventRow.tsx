@@ -1,9 +1,8 @@
-import { Fragment } from "react/jsx-runtime";
-import { useOddsData } from "../store";
+import { memo, Fragment } from "react";
 import type { Match } from "../../../types";
+import { useOddsData } from "../store";
 import { getMatchTimeAndHalf } from "../utils";
 import Outcome from "./Outcome";
-import { memo } from "react";
 
 const Th = ({
   span = 1,
@@ -37,12 +36,13 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
 
   const selectedOdd = selectedOdds[match.id];
 
+  console.log({ totalGoals });
   return (
     <div className="bg-table-row text-black mx-auto h-full overflow-x-auto no-scrollbar">
       {/* HEADER */}
       <div className="grid grid-cols-14 gap-2 items-center text-sm border-t-2 border-b-2 border-gray-500 bg-white-200 px-4 min-w-max">
         <Th label="Time" />
-        <Th label="Pair" span={3} />
+        <Th label="Pair ⚽" span={3} />
         <Th label="Score" />
 
         {/* BETTING OPTIONS */}
@@ -52,7 +52,7 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
         {doubleChance.map((odd) => (
           <Th key={odd.id} label={odd.name} className="text-center" />
         ))}
-        {totalGoals.slice(0, 2).map((odd, i) => (
+        {totalGoals.map((odd, i) => (
           <Fragment key={odd.id}>
             {i === 1 && <Th label="Total" className="text-center" />}
             <Th label={odd.name} className="text-center" />
@@ -70,7 +70,6 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
             {matchTimeAndHalf.formattedStartTime}
           </span>
         </div>
-
         <div className="col-span-3 min-w-[150px]">
           <div className="flex flex-col space-y-2">
             {[home, away].map(({ logo, name }, i) => (
@@ -82,12 +81,11 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
                     src={logo}
                   />
                 </div>
-                <span className="text-sm">{name}</span>
+                <span className="text-sm max-w-50 truncate">{name}</span>
               </div>
             ))}
           </div>
         </div>
-
         <div className="col-span-1 text-white">
           {[match.score.home, match.score.away].map((score, i) => (
             <div
@@ -98,7 +96,6 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
             </div>
           ))}
         </div>
-
         {oneXTwo.map((odd) => {
           const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
           return (
@@ -120,7 +117,6 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
             />
           );
         })}
-
         {doubleChance.map((odd) => {
           const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
           return (
@@ -142,19 +138,15 @@ const EventRow: React.FC<EventRowProps> = ({ match }) => {
             />
           );
         })}
-
-        {totalGoals.slice(0, 2).map((odd, i) => {
+        {totalGoals.map((odd, i) => {
           const isActive = selectedOdd && selectedOdd.outcomeId === odd.id;
           return (
             <Fragment key={odd.id}>
               {i === 1 && (
                 <Outcome
-                  value={odd.odds}
+                  value={odd.line!}
                   prevValue={odd.prevOdds}
-                  onClick={() => {
-                    // TODO
-                    console.log("handle total change");
-                  }}
+                  onClick={() => {}}
                 />
               )}
               <Outcome

@@ -1,11 +1,8 @@
 import type { Match } from "../types";
 import { AppConfig } from "../AppConfig";
 
-// TODO remove
-// let i = 0;
 const getRandomItem = (matches: Match[]) => {
   const randomIndex = Math.floor(Math.random() * matches.length);
-  // const randomIndex = i++;
   return matches[randomIndex];
 };
 
@@ -24,7 +21,6 @@ export const getRandomMatchUpdates = ({
 }) => {
   const updates = [];
   for (let i = 0; i < count; i++) {
-    // Pick random match
     const randomMatch = getRandomItem(matches);
 
     const markets = randomMatch.markets;
@@ -50,7 +46,6 @@ export const getRandomMatchUpdates = ({
       markets,
     });
   }
-  // i = 0; // tODO
 
   return updates;
 };
