@@ -43,14 +43,8 @@ export const getRandomMatch = (): Match => {
   const matchProgress =
     randomOffset < 0 ? Math.min(100, Math.abs(randomOffset) / 1.8) : 0;
 
-  const homeScore = Math.min(
-    5,
-    Math.floor(matchProgress / 20) * faker.number.int({ min: 0, max: 1 })
-  );
-  const awayScore = Math.min(
-    5,
-    Math.floor(matchProgress / 20) * faker.number.int({ min: 0, max: 1 })
-  );
+  const homeScore = Math.min(5, faker.number.int({ min: 0, max: 3 }));
+  const awayScore = Math.min(5, faker.number.int({ min: 0, max: 3 }));
 
   const isFavorite = faker.datatype.boolean();
   let homeWin, awayWin;
