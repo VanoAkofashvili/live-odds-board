@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @layer utilities {
-  /* TODO */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
