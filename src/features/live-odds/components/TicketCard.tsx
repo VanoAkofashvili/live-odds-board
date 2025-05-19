@@ -44,9 +44,9 @@ const TicketCard = () => {
             {tickets.map((ticket) => {
               const matchId = ticket.id;
 
-              const { odds } = ticket.markets[
+              const outcome = ticket.markets[
                 ticket.marketId as MarketType
-              ].selections.find((s) => s.id === ticket.outcomeId)!;
+              ].selections.find((s) => s.id === ticket.outcomeId);
               return (
                 <div
                   key={matchId}
@@ -75,7 +75,7 @@ const TicketCard = () => {
                     <p>{ticket.gameName}</p>
                     <p className="text-gray-400">{ticket.outcomeName}</p>
                     <div className="text-white text-sm ">
-                      <Outcome isActive value={odds} />
+                      <Outcome isActive value={outcome?.odds || 0} />
                     </div>
                   </div>
                 </div>

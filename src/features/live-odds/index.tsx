@@ -32,9 +32,10 @@ const LiveOddsBoard = () => {
     socket.addEventListener("message", (event) => {
       updateMatches(transformMatches(JSON.parse(event.data)));
     });
+
+    return () => socket.close();
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const saveScrollOffset = useCallback(
     debounce((scrollOffset: number) => {
       localStorage.setItem("scrollOffset", String(scrollOffset));
