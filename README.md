@@ -1,54 +1,53 @@
-# React + TypeScript + Vite
+# Live odds
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live version: https://live-odds-board.vercel.app/
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+These instructions will help you set up and run the project on your local machine.
 
-## Expanding the ESLint configuration
+### 📦 Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Before you begin, make sure you have the following installed:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- [Node.js](https://nodejs.org/) (Recommended: LTS version)
+- [Yarn](https://yarnpkg.com/) package manager
+
+### 🔧 Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone git@github.com:VanoAkofashvili/live-odds-board.git
+cd live-odds-board
+yarn
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the dev server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+yarn dev
 ```
+
+Go to:
+[http://localhost:3000/](http://localhost:3000/)
+
+## ⚙️ Configuration
+
+You can configure the project settings by opening `src/AppConfig.ts`
+
+## 😁 Future improvements
+
+Below are some planned enhancements and technical improvements for the project:
+
+- **Use Immutable.js**  
+  Integrate [Immutable.js](https://immutable-js.github.io/immutable-js/) to efficiently manage and manipulate large lists, ensuring performance and consistency in state updates.
+
+- **Replace Mock Data with Real Backend**  
+  Remove current mock data implementations and connect the application to a real backend API for dynamic and production-ready data flow.
+
+- **Implement Pagination**  
+  Add pagination to improve user experience and application performance when dealing with large datasets.
+
+- **Add Support for Different Sport Tabs**  
+  Introduce navigation tabs for different sports to enhance content categorization and allow users to easily switch between sport-specific views.
